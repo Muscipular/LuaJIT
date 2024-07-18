@@ -1317,3 +1317,8 @@ LUA_API void lua_setallocf(lua_State *L, lua_Alloc f, void *ud)
   g->allocf = f;
 }
 
+LUA_API int lua_setconstlist(lua_State *L, lua_const *constlist)
+{
+    L->constlist = constlist;
+    return 0;
+}

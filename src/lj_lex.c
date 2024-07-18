@@ -367,6 +367,36 @@ static LexToken lex_scan(LexState *ls, TValue *tv)
     case '\'':
       lex_string(ls, tv);
       return TK_string;
+    case '%':
+    {
+//      printf("%c start\n", ls->c);
+
+      lua_const *tm_constlist = ls->L->constlist;
+      if (tm_constlist != NULL) {
+          lex_next(ls);
+          while (ls->c != '%' && ls->c != LEX_EOF) {
+              lex_savenext(ls);
+          }
+          if (ls->c == '%') {
+              lex_savenext(ls);
+          }
+          char* p = ls->sb.b;
+//          printf("> %s:", (char*)p);
+//     /*     sbufB(&ls->sb), sbuflen(&ls->sb)*/
+          while(tm_constlist->name != NULL)
+          {
+              if (memcmp(p, tm_constlist->name, tm_constlist->size - 1) == 0) {
+//                  printf(" %d\nFOUND\n", tm_constlist->vl);
+                  tv->n = (double) tm_constlist->vl;
+                  return TK_number;
+              }
+              tm_constlist++;
+          }
+      }
+//      printf(" %d\nNOT FOUND\n", 0);
+//      tv->n = 0.0;
+      return TK_nil;
+    }
     case '.':
       if (lex_savenext(ls) == '.') {
 	lex_next(ls);

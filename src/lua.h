@@ -372,6 +372,15 @@ struct lua_Debug {
   int i_ci;  /* active function */
 };
 
+typedef struct __lua_const
+{
+    const char *name;
+    unsigned int size;
+    int vl;
+} lua_const;
+
+LUA_API int lua_setconstlist(lua_State *L, lua_const *constlist);
+
 /* }====================================================================== */
 
 
